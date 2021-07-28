@@ -44,7 +44,8 @@ public class BotStateUnifier {
     private boolean isFillingNewData(BotState currentState) {
         switch (currentState) {
             case ASK_FIRST_NAME:
-            case FILLED_NEW_DATA:
+            case SHOW_KEYBOARD_YES_NO:
+            case FILLING_NEW_DATA_COMPLETE:
                 return true;
             default:
                 return false;

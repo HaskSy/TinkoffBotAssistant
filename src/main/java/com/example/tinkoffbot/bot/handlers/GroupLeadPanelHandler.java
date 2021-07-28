@@ -22,6 +22,6 @@ public class GroupLeadPanelHandler implements MessageHandler {
 
     @Override
     public BotState getHandleName() {
-        return BotState.SHOW_GROUP_LEAD_PANEL;
+        return BotState.SHOW_KEYBOARD_GROUP_LEAD;
     }
 }

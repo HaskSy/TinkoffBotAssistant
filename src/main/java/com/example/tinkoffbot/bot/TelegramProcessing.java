@@ -8,8 +8,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.io.IOException;
-
 @Component
 public class TelegramProcessing {
 
@@ -55,20 +53,20 @@ public class TelegramProcessing {
             /// --- MAIN MENU PANEL --- ///
 
         } else if (input.equals("Ввести новые данные") &&
-                (currentBotState.equals(BotState.SHOW_MAIN_MENU) || currentBotState.equals(BotState.FILLING_NEW_DATA))) {
+                (currentBotState.equals(BotState.SHOW_KEYBOARD_MAIN_MENU) || currentBotState.equals(BotState.FILLING_NEW_DATA))) {
             botState = BotState.FILLING_NEW_DATA;
         } else if (input.equals("Ошибка в данных") &&
-                (currentBotState.equals(BotState.SHOW_MAIN_MENU) || currentBotState.equals(BotState.SEND_DATA_REPORT))) {
-            botState = BotState.SEND_DATA_REPORT;
+                (currentBotState.equals(BotState.SHOW_KEYBOARD_MAIN_MENU) || currentBotState.equals(BotState.REPORT_FILLING_DATA_ERROR))) {
+            botState = BotState.REPORT_FILLING_DATA_ERROR;
         } else if (input.equals("Статистика") &&
-                (currentBotState.equals(BotState.SHOW_MAIN_MENU) || currentBotState.equals(BotState.COLLECTING_USER_STATISTICS))) {
+                (currentBotState.equals(BotState.SHOW_KEYBOARD_MAIN_MENU) || currentBotState.equals(BotState.COLLECTING_USER_STATISTICS))) {
             botState = BotState.COLLECTING_USER_STATISTICS;
         } else if (input.equals("Помощь") &&
-                (currentBotState.equals(BotState.SHOW_MAIN_MENU) || currentBotState.equals(BotState.SEND_REPLY_ON_HELP))) {
-            botState = BotState.SEND_REPLY_ON_HELP;
+                (currentBotState.equals(BotState.SHOW_KEYBOARD_MAIN_MENU) || currentBotState.equals(BotState.SEND_HELP_MESSAGE_ASSISTANT))) {
+            botState = BotState.SEND_HELP_MESSAGE_ASSISTANT;
         } else if (input.equals("Панель лидера группы") &&
-                (currentBotState.equals(BotState.SHOW_MAIN_MENU) || currentBotState.equals(BotState.SHOW_GROUP_LEAD_PANEL))) {
-            botState = BotState.SHOW_GROUP_LEAD_PANEL;
+                (currentBotState.equals(BotState.SHOW_KEYBOARD_MAIN_MENU) || currentBotState.equals(BotState.SHOW_KEYBOARD_GROUP_LEAD))) {
+            botState = BotState.SHOW_KEYBOARD_GROUP_LEAD;
 
             /// !--- MAIN MENU PANEL --- ///
 
@@ -76,20 +74,20 @@ public class TelegramProcessing {
 
 
         } else if (input.equals("Статистика группы") &&
-                (currentBotState.equals(BotState.SHOW_GROUP_LEAD_PANEL) || currentBotState.equals(BotState.GROUP_STATISTIC_COLLECT))) {
-            botState = BotState.GROUP_STATISTIC_COLLECT;
+                (currentBotState.equals(BotState.SHOW_KEYBOARD_GROUP_LEAD) || currentBotState.equals(BotState.COLLECTING_GROUP_STATISTICS))) {
+            botState = BotState.COLLECTING_GROUP_STATISTICS;
         } else if (input.equals("Анализ Data Report-ов") &&
-                (currentBotState.equals(BotState.SHOW_GROUP_LEAD_PANEL) || currentBotState.equals(BotState.ANALYSING_DATA_REPORTS))) {
+                (currentBotState.equals(BotState.SHOW_KEYBOARD_GROUP_LEAD) || currentBotState.equals(BotState.ANALYSING_DATA_REPORTS))) {
             botState = BotState.ANALYSING_DATA_REPORTS;
         } else if (input.equals("Что-то еще") &&
-                (currentBotState.equals(BotState.SHOW_GROUP_LEAD_PANEL) || currentBotState.equals(BotState.SOMETHING_ELSE))) {
-            botState = BotState.SHOW_GROUP_LEAD_PANEL;
+                (currentBotState.equals(BotState.SHOW_KEYBOARD_GROUP_LEAD) || currentBotState.equals(BotState.SOMETHING_ELSE))) {
+            botState = BotState.SHOW_KEYBOARD_GROUP_LEAD;
         } else if (input.equals("Помощь") &&
-                (currentBotState.equals(BotState.SHOW_GROUP_LEAD_PANEL) || currentBotState.equals(BotState.SEND_REPLY_ON_GROUP_HELP))) {
-            botState = BotState.SEND_REPLY_ON_GROUP_HELP;
+                (currentBotState.equals(BotState.SHOW_KEYBOARD_GROUP_LEAD) || currentBotState.equals(BotState.SEND_HELP_MESSAGE_GROUP_LEAD))) {
+            botState = BotState.SEND_HELP_MESSAGE_GROUP_LEAD;
         } else if (input.equals("Назад") &&
-                (currentBotState.equals(BotState.SHOW_GROUP_LEAD_PANEL) || currentBotState.equals(BotState.BACK_TO_MAIN_MENU))) {
-            botState = BotState.SHOW_MAIN_MENU;
+                (currentBotState.equals(BotState.SHOW_KEYBOARD_GROUP_LEAD) || currentBotState.equals(BotState.BACK_TO_MAIN_MENU))) {
+            botState = BotState.SHOW_KEYBOARD_MAIN_MENU;
 
             /// !--- GROUP LEAD PANEL --- ///
 

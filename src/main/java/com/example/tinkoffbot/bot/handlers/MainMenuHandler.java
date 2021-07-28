@@ -22,7 +22,7 @@ public class MainMenuHandler implements MessageHandler {
 
     @Override
     public BotState getHandleName() {
-        return BotState.SHOW_MAIN_MENU;
+        return BotState.SHOW_KEYBOARD_MAIN_MENU;
     }
 
 }

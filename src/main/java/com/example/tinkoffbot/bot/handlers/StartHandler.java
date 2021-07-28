@@ -21,7 +21,7 @@ public class StartHandler implements MessageHandler {
     @Override
     public SendMessage handle(Message message) {
         if (userDataCache.getUserCurrentBotState(message.getFrom().getId()).equals(BotState.START)) {
-            userDataCache.setUserCurrentBotState(message.getFrom().getId(), BotState.SHOW_MAIN_MENU);
+            userDataCache.setUserCurrentBotState(message.getFrom().getId(), BotState.SHOW_KEYBOARD_MAIN_MENU);
         }
         return processUsersInput(message);
     }
@@ -36,7 +36,7 @@ public class StartHandler implements MessageHandler {
         long chatId = message.getChatId();
 
         SendMessage reply = buttonService.getMainMenuMessage(chatId, "Привет, я бот неОлег. Я отвечаю только тем представителям, которые находятся в базе данных. Ну что, приступим?");
-        userDataCache.setUserCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
+        userDataCache.setUserCurrentBotState(userId, BotState.SHOW_KEYBOARD_MAIN_MENU);
         return reply;
 
 

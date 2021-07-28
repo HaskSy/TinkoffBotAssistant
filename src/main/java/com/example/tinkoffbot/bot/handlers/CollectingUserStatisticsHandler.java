@@ -7,17 +7,17 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 @Component
-public class CollectingStatisticsHandler implements MessageHandler {
+public class CollectingUserStatisticsHandler implements MessageHandler {
 
     private UserDataCache userDataCache;
 
-    public CollectingStatisticsHandler(UserDataCache userDataCache) {
+    public CollectingUserStatisticsHandler(UserDataCache userDataCache) {
         this.userDataCache = userDataCache;
     }
 
     @Override
     public SendMessage handle(Message message) {
-        userDataCache.setUserCurrentBotState(message.getFrom().getId(), BotState.SHOW_MAIN_MENU);
+        userDataCache.setUserCurrentBotState(message.getFrom().getId(), BotState.SHOW_KEYBOARD_MAIN_MENU);
         return new SendMessage(message.getChatId(), "Здесь будет высвечиваться меню с предложением посмотреть свою статистику за последний день/неделю/месяц/итд");
     }
 

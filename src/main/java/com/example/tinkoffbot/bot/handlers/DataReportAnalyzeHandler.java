@@ -17,7 +17,7 @@ public class DataReportAnalyzeHandler implements MessageHandler {
 
     @Override
     public SendMessage handle(Message message) {
-        userDataCache.setUserCurrentBotState(message.getFrom().getId(), BotState.SHOW_GROUP_LEAD_PANEL);
+        userDataCache.setUserCurrentBotState(message.getFrom().getId(), BotState.SHOW_KEYBOARD_GROUP_LEAD);
         return new SendMessage(message.getChatId(), "Сюда лидеру группы будет приходить список запросов на изменение данных в случае ошибки");
     }
 

@@ -7,22 +7,22 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 @Component
-public class GroupLeaderHelpHandler implements MessageHandler {
+public class HelpMessageAssistantHandler implements MessageHandler {
 
     private UserDataCache userDataCache;
 
-    public GroupLeaderHelpHandler(UserDataCache userDataCache) {
+    public HelpMessageAssistantHandler(UserDataCache userDataCache) {
         this.userDataCache = userDataCache;
     }
 
     @Override
     public SendMessage handle(Message message) {
-        userDataCache.setUserCurrentBotState(message.getFrom().getId(), BotState.SHOW_GROUP_LEAD_PANEL);
-        return new SendMessage(message.getChatId(), "Информация по пользованию панелью админа (лидера группы)");
+        userDataCache.setUserCurrentBotState(message.getFrom().getId(), BotState.SHOW_KEYBOARD_MAIN_MENU);
+        return new SendMessage(message.getChatId(), "Подсказки по пользованию ботом");
     }
 
     @Override
     public BotState getHandleName() {
-        return BotState.SEND_REPLY_ON_GROUP_HELP;
+        return BotState.SEND_HELP_MESSAGE_ASSISTANT;
     }
 }

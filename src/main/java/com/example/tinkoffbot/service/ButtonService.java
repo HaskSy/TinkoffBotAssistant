@@ -22,6 +22,16 @@ public class ButtonService {
         return createMessageWithKeyboard(chatId, textMessage, replyKeyboardMarkup);
     }
 
+    public SendMessage getYesNoMessage(final long chatId, final String textMessage) {
+        final ReplyKeyboardMarkup replyKeyboardMarkup = getYesNoKeyboard();
+        return createMessageWithKeyboard(chatId, textMessage, replyKeyboardMarkup);
+    }
+
+    public SendMessage getCancelMessage(final long chatId, final String textMessage) {
+        final ReplyKeyboardMarkup replyKeyboardMarkup = getCancelKeyboard();
+        return createMessageWithKeyboard(chatId, textMessage, replyKeyboardMarkup);
+    }
+
 
 
     private ReplyKeyboardMarkup getMainMenuKeyboard() {
@@ -57,6 +67,35 @@ public class ButtonService {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setKeyboard(keyboardRows);
         replyKeyboardMarkup.setOneTimeKeyboard(false);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+
+        return replyKeyboardMarkup;
+    }
+
+    private ReplyKeyboardMarkup getYesNoKeyboard() {
+        List<KeyboardRow> keyboardRows = new ArrayList<>();
+        KeyboardRow keyboardRow1 = new KeyboardRow();
+        keyboardRow1.add(new KeyboardButton("Да"));
+        KeyboardRow keyboardRow2 = new KeyboardRow();
+        keyboardRow2.add(new KeyboardButton("Нет"));
+        keyboardRows.add(keyboardRow1);
+        keyboardRows.add(keyboardRow2);
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setKeyboard(keyboardRows);
+        replyKeyboardMarkup.setOneTimeKeyboard(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+
+        return replyKeyboardMarkup;
+    }
+
+    private ReplyKeyboardMarkup getCancelKeyboard() {
+        List<KeyboardRow> keyboardRows = new ArrayList<>();
+        KeyboardRow keyboardRow = new KeyboardRow();
+        keyboardRow.add(new KeyboardButton("Отмена"));
+        keyboardRows.add(keyboardRow);
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setKeyboard(keyboardRows);
+        replyKeyboardMarkup.setOneTimeKeyboard(true);
         replyKeyboardMarkup.setResizeKeyboard(true);
 
         return replyKeyboardMarkup;
