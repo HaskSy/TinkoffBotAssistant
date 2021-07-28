@@ -18,11 +18,11 @@ public class BotConfig {
     private String botToken;
 
     @Bean
-    public TelegramBot telegramBot() {
+    public TelegramBot telegramBot(TelegramProcessing telegramProcessing) {
         DefaultBotOptions options = ApiContext
                 .getInstance(DefaultBotOptions.class);
 
-        TelegramBot telegramBot = new TelegramBot(options);
+        TelegramBot telegramBot = new TelegramBot(options, telegramProcessing);
         telegramBot.setBotUsername(botUsername);
         telegramBot.setBotToken(botToken);
         telegramBot.setWebHookPath(webHookPath);

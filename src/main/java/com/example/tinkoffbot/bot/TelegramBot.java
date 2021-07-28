@@ -7,14 +7,19 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.IOException;
+
 public class TelegramBot extends TelegramWebhookBot {
 
     private String webHookPath;
     private String botUserName;
     private String botToken;
 
-    public TelegramBot(DefaultBotOptions botOptions) {
+    private TelegramProcessing telegramProcessing;
+
+    public TelegramBot(DefaultBotOptions botOptions, TelegramProcessing telegramProcessing) {
         super(botOptions);
+        this.telegramProcessing = telegramProcessing;
     }
 
     @Override
@@ -45,18 +50,8 @@ public class TelegramBot extends TelegramWebhookBot {
     }
 
     @Override
-    public BotApiMethod onWebhookUpdateReceived(Update update) {
-        if (update.getMessage() != null && update.getMessage().hasText()) {
-            long chatId = update.getMessage().getChatId();
-
-            try {
-                execute(new SendMessage(chatId, update.getMessage().getText()));
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return null;
+    public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
+        return telegramProcessing.handleUpdate(update);
     }
 
 
