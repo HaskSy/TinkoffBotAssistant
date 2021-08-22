@@ -3,11 +3,11 @@ package com.example.tinkoffbot.bot;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
+
 
 public class TelegramBot extends TelegramWebhookBot {
 
@@ -51,7 +51,12 @@ public class TelegramBot extends TelegramWebhookBot {
 
     @Override
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
-        return telegramProcessing.handleUpdate(update);
+        try {
+            return telegramProcessing.handleUpdate(update);
+        } catch (IOException | GeneralSecurityException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 

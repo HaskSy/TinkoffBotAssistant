@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class BotStateUnifier {
         );
     }
 
-    public SendMessage execute(BotState currentState, Message message) {
+    public SendMessage execute(BotState currentState, Message message) throws IOException, GeneralSecurityException {
         MessageHandler currentMessageHandler = findMessageHandler(currentState);
         log.info("Starting handling MessageHandler: {}, Message: {}",
                 currentMessageHandler.getHandleName().toString(),
@@ -35,21 +37,6 @@ public class BotStateUnifier {
 
     private MessageHandler findMessageHandler(BotState currentState) {
         log.info("Trying to find in messageHandlerMap BotState: {}", currentState);
-        if (isFillingNewData(currentState)) {
-            return messageHandlerMap.get(BotState.FILLING_NEW_DATA);
-        }
         return messageHandlerMap.get(currentState);
     }
-
-    private boolean isFillingNewData(BotState currentState) {
-        switch (currentState) {
-            case ASK_FIRST_NAME:
-            case SHOW_KEYBOARD_YES_NO:
-            case FILLING_NEW_DATA_COMPLETE:
-                return true;
-            default:
-                return false;
-        }
-    }
-
 }
