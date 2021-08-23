@@ -22,9 +22,8 @@ import com.google.api.services.sheets.v4.model.*;
 import java.io.*;
 
 import java.security.GeneralSecurityException;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
+
 import java.util.*;
 
 public class GoogleSheetsService {
@@ -41,6 +40,10 @@ public class GoogleSheetsService {
 
     private static final List<String> SCOPES = Arrays.asList(SheetsScopes.SPREADSHEETS, DriveScopes.DRIVE);
     private static final String CREDENTIALS_FILE_PATH = "/client_secret.json";
+
+    private static final String FOLDER_ID_PATH = "src/main/resources/folder-id";
+
+    private static String folderId = null;
 
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
         // Load client secrets.
@@ -77,71 +80,20 @@ public class GoogleSheetsService {
                 .build();
     }
 
-    public static void processSentMessage(UserData userData) throws GeneralSecurityException, IOException {
+    private static String readIdFromFile(String path) throws FileNotFoundException {
+        Scanner sc = new Scanner(new java.io.File(path));
+        if (sc.hasNextLine()) {
+            String line = sc.nextLine();
+            sc.close();
+            return line;
+        }
+        return null;
+    }
 
-        Drive driveService = getDriveService();
-
-        String pageToken = null;
-
-        do {
-            FileList result = driveService.files().list()
-                    .setQ("trashed = false and 'root' in parents and mimeType = 'application/vnd.google-apps.folder' ")
-                    .setSpaces("drive")
-                    .setFields("nextPageToken, files(id, name)")
-                    .setPageToken(pageToken)
-                    .execute();
-
-            String programFolderId = null;
-
-            for (File file : result.getFiles()) {
-                if (file.getName().equals(APPLICATION_GOOGLE_DRIVE_FOLDER)) {
-                    programFolderId = file.getId();
-                    break;
-                }
-            }
-
-            if (programFolderId == null) {
-                File fileMetadata = new File();
-                fileMetadata.setName(APPLICATION_GOOGLE_DRIVE_FOLDER);
-                fileMetadata.setMimeType("application/vnd.google-apps.folder");
-
-                programFolderId = driveService.files().create(fileMetadata)
-                        .setFields("id")
-                        .execute().getId();
-            }
-
-
-            FileList sheetsList = driveService.files().list()
-                    .setQ("trashed = false and '"+ programFolderId + "' in parents and mimeType = 'application/vnd.google-apps.spreadsheet' ")
-                    .setSpaces("drive")
-                    .setFields("nextPageToken, files(id, name)")
-                    .setPageToken(pageToken)
-                    .execute();
-
-
-
-
-            String currentSheetName = SPREADSHEET_PREFIX+LocalDateTime.now(ZoneId.of("Europe/Moscow"))
-                    .format(DateTimeFormatter.ofPattern("MM.yyyy"));
-
-            String currentSheetId = null;
-
-            for (File file : sheetsList.getFiles()) {
-                if (file.getName().equals(currentSheetName)) {
-                    currentSheetId = file.getId();
-                    break;
-                }
-            }
-
-            if (currentSheetId == null) {
-                currentSheetId = createNewSheet(currentSheetName, programFolderId);
-            }
-
-            uploadDataInSheet(userData, currentSheetId);
-
-            pageToken = result.getNextPageToken();
-
-        } while (pageToken != null);
+    private static void writeIdFromFile(String path, String id) throws IOException {
+        FileWriter writer = new FileWriter(path);
+        writer.append(id);
+        writer.close();
     }
 
     private static String createNewSheet(String title, String programFolderId) throws IOException, GeneralSecurityException {
@@ -160,7 +112,7 @@ public class GoogleSheetsService {
                 Arrays.asList("ФИО", "КК", "ДК", "ТИ", "СИМ", "МНП")
         ));
 
-        AppendValuesResponse valuesResponse = getSheetsService().spreadsheets().values()
+        getSheetsService().spreadsheets().values()
                 .append(file.getId(), "Лист1", appendBody)
                 .setValueInputOption("USER_ENTERED")
                 .setInsertDataOption("INSERT_ROWS")
@@ -171,9 +123,9 @@ public class GoogleSheetsService {
         return file.getId();
     }
 
-    private static void uploadDataInSheet(UserData userData, String spreadsheetId) throws IOException, GeneralSecurityException {
+    private static ValueRange uploadDataInSheet(UserData userData, String spreadsheetId) throws IOException, GeneralSecurityException {
 
-        List<String> userDataList = Arrays.asList(userData.toString().split(" "));
+        List<Object> userDataList = Arrays.asList(userData.getName(), userData.getKK(), userData.getDK(), userData.getTI(), userData.getSIM(), userData.getMNP());
 
         ValueRange appendBody = new ValueRange();
 
@@ -187,14 +139,14 @@ public class GoogleSheetsService {
         int i = 1;
         for (; i < listList.size(); i++) {
             List<Object> row = listList.get(i);
-            if (row.get(0).toString().equals(userDataList.get(0))) {
+            if (row.get(0).toString().equals(userDataList.get(0).toString())) {
                 appendBody.setValues(Collections.singletonList(
-                        Arrays.asList(userDataList.get(0),
-                                Integer.parseInt(row.get(1).toString()) + Integer.parseInt(userDataList.get(1)),
-                                Integer.parseInt(row.get(2).toString()) + Integer.parseInt(userDataList.get(2)),
-                                Integer.parseInt(row.get(3).toString()) + Integer.parseInt(userDataList.get(3)),
-                                Integer.parseInt(row.get(4).toString()) + Integer.parseInt(userDataList.get(4)),
-                                Integer.parseInt(row.get(5).toString()) + Integer.parseInt(userDataList.get(5))
+                        Arrays.asList(userDataList.get(0).toString(),
+                                Integer.parseInt(row.get(1).toString()) + Integer.parseInt(userDataList.get(1).toString()),
+                                Integer.parseInt(row.get(2).toString()) + Integer.parseInt(userDataList.get(2).toString()),
+                                Integer.parseInt(row.get(3).toString()) + Integer.parseInt(userDataList.get(3).toString()),
+                                Integer.parseInt(row.get(4).toString()) + Integer.parseInt(userDataList.get(4).toString()),
+                                Integer.parseInt(row.get(5).toString()) + Integer.parseInt(userDataList.get(5).toString())
                         )
                 ));
                 updating = true;
@@ -204,9 +156,9 @@ public class GoogleSheetsService {
 
         if (!updating) {
 
-            appendBody.setValues(Collections.singletonList(Arrays.asList(userData.toString().split(" "))));
+            appendBody.setValues(Collections.singletonList(userDataList));
 
-            AppendValuesResponse valuesResponse = getSheetsService().spreadsheets().values()
+            getSheetsService().spreadsheets().values()
                     .append(spreadsheetId, "Лист1", appendBody)
                     .setValueInputOption("USER_ENTERED")
                     .setInsertDataOption("INSERT_ROWS")
@@ -215,14 +167,120 @@ public class GoogleSheetsService {
 
         } else {
 
-            UpdateValuesResponse result = getSheetsService().spreadsheets().values()
+            getSheetsService().spreadsheets().values()
                     .update(spreadsheetId, "A"+ (i + 1) +":F"+ (i + 1), appendBody)
                     .setValueInputOption("RAW")
                     .execute();
 
         }
 
+        return appendBody;
+
     }
 
+    public static List<Object> processSentMessage(UserData userData, Integer timestamp) throws GeneralSecurityException, IOException {
+
+        Drive driveService = getDriveService();
+
+        List<Object> ans;
+
+
+            if (folderId == null) {
+                folderId = readIdFromFile(FOLDER_ID_PATH);
+            }
+
+            if (folderId == null) {
+
+                FileList result = driveService.files().list()
+                        .setQ("trashed = false and 'root' in parents and mimeType = 'application/vnd.google-apps.folder' ")
+                        .setSpaces("drive")
+                        .setFields("nextPageToken, files(id, name)")
+                        .execute();
+
+                for (File file : result.getFiles()) {
+                    if (file.getName().equals(APPLICATION_GOOGLE_DRIVE_FOLDER)) {
+                        folderId = file.getId();
+                        writeIdFromFile(FOLDER_ID_PATH, folderId);
+                        break;
+                    }
+                }
+
+                if (folderId == null) {
+                    File fileMetadata = new File();
+                    fileMetadata.setName(APPLICATION_GOOGLE_DRIVE_FOLDER);
+                    fileMetadata.setMimeType("application/vnd.google-apps.folder");
+
+                    folderId = driveService.files().create(fileMetadata)
+                            .setFields("id")
+                            .execute().getId();
+
+                    writeIdFromFile(FOLDER_ID_PATH, folderId);
+                }
+
+
+            }
+
+
+            String currentSheetId = getCurrentSpreadsheet(timestamp);
+
+            ans = uploadDataInSheet(userData, currentSheetId).getValues().get(0);
+
+        return ans;
+
+    }
+
+    public static void updateName(String prevName, String newName, String spreadsheetId) throws IOException, GeneralSecurityException {
+        List<List<Object>> sheetInfo = getSheetsService().spreadsheets().values().get(spreadsheetId, "Лист1").execute().getValues();
+
+        boolean updating = false;
+
+        int i = 1;
+        for (; i < sheetInfo.size(); i++) {
+            List<Object> row = sheetInfo.get(i);
+            if (row.get(0).toString().equals(prevName)) {
+                updating = true;
+                break;
+            }
+        }
+
+        if (updating) {
+            getSheetsService().spreadsheets().values()
+                    .update(spreadsheetId, "A"+ (i + 1), new ValueRange().setValues(Collections.singletonList(Collections.singletonList(newName))))
+                    .setValueInputOption("RAW")
+                    .execute();
+        }
+    }
+
+    public static String getCurrentSpreadsheet(int timestamp) throws IOException, GeneralSecurityException {
+
+        FileList sheetsList = getDriveService().files().list()
+                .setQ("trashed = false and '"+ folderId + "' in parents and mimeType = 'application/vnd.google-apps.spreadsheet' ")
+                .setSpaces("drive")
+                .setFields("nextPageToken, files(id, name)")
+                .execute();
+
+//            String currentSheetName = SPREADSHEET_PREFIX+LocalDateTime.now(ZoneId.of("Europe/Moscow"))
+//                    .format(DateTimeFormatter.ofPattern("MM.yyyy"));
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis((long)timestamp*1000);
+        SimpleDateFormat outputFmt = new SimpleDateFormat("MM.yy");
+        String currentSheetName = SPREADSHEET_PREFIX+outputFmt.format(calendar.getTime());
+
+        String currentSheetId = null;
+
+        for (File file : sheetsList.getFiles()) {
+            if (file.getName().equals(currentSheetName)) {
+                currentSheetId = file.getId();
+                break;
+            }
+        }
+
+        if (currentSheetId == null) {
+            currentSheetId = createNewSheet(currentSheetName, folderId);
+        }
+
+        return currentSheetId;
+    }
 
 }

@@ -28,10 +28,4 @@ public class WebHookController {
         return telegramBot.onWebhookUpdateReceived(update);
     }
 
-//    @GetMapping("/setWebHook/{url}")
-//    public WebHookResponse getWebHook(
-//            @PathVariable("url") String url) throws IOException {
-//        return telegramBot.setRetrofitWebhook(url);
-//    }
-
 }

@@ -15,7 +15,7 @@ public class TelegramBot extends TelegramWebhookBot {
     private String botUserName;
     private String botToken;
 
-    private TelegramProcessing telegramProcessing;
+    private final TelegramProcessing telegramProcessing;
 
     public TelegramBot(DefaultBotOptions botOptions, TelegramProcessing telegramProcessing) {
         super(botOptions);
@@ -58,6 +58,5 @@ public class TelegramBot extends TelegramWebhookBot {
         }
         return null;
     }
-
 
 }

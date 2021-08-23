@@ -3,7 +3,7 @@ package com.example.tinkoffbot.bot.handlers;
 import com.example.tinkoffbot.bot.BotState;
 import com.example.tinkoffbot.model.UserData;
 import com.example.tinkoffbot.services.GoogleSheetsService;
-import com.google.api.services.sheets.v4.Sheets;
+import com.vdurmont.emoji.EmojiParser;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -18,17 +18,15 @@ import java.util.Scanner;
 @Component
 public class DataCollectingHandler implements MessageHandler {
 
-    private static String trim(String text) {
-        String data = text.replaceFirst("/send ", "").replaceAll("\\s+", " ").toLowerCase();
-        if (data.startsWith(" ")) {
-            return data.substring(1);
-        }
-        return data;
+    private static String[] trim(String text) {
+        return text.replaceAll("\\s+", " ")
+                .replaceFirst("/send ", "")
+                .toLowerCase()
+                .split("\\s|\\n");
     }
 
-    public static String getNameById(int userId) throws FileNotFoundException {
+    private static String getNameById(String path, int userId) throws FileNotFoundException {
 
-        String path = "src/main/resources/id-name-file";
         Scanner sc = new Scanner(new File(path));
 
         while (sc.hasNextLine()) {
@@ -69,22 +67,26 @@ public class DataCollectingHandler implements MessageHandler {
 
     @Override
     public SendMessage handle(Message message) throws IOException, GeneralSecurityException {
-        if (message.getText().startsWith("/send ")) {
-            String data = trim(message.getText());
-            String[] dataList = data.split(" ");
 
-            if (dataList.length % 2 != 0) {
-                return new SendMessage(message.getChatId(), "Данные введены неверно");
-            }
+        String textMessage = message.getText();
 
+        if (textMessage.startsWith("/send ") || message.getText().startsWith("/send\n")) {
 
-            String name = getNameById(message.getFrom().getId());
+            String[] dataList = trim(textMessage);
+            String path = "src/main/resources/id-name-file";
+
+            String name = getNameById(path, message.getFrom().getId());
+
             if (name == null) {
-                return new SendMessage(message.getChatId(), "Вы должны сначала записать свое ФИО через /reg");
+                return new SendMessage(message.getChatId(), "[" + message.getFrom().getUserName() +"]: Вы должны сначала записать свое ФИО через /reg");
             }
 
             UserData userData = new UserData();
             userData.setName(name);
+
+            if (dataList.length % 2 != 0) {
+                return new SendMessage(message.getChatId(), "[" + name + "]: Данные введены неверно " + EmojiParser.parseToUnicode(":x:"));
+            }
 
             boolean correctFlag = true;
 
@@ -140,13 +142,20 @@ public class DataCollectingHandler implements MessageHandler {
 
             if (correctFlag) {
 
-//                GoogleSheetsService.addTestLineToSheet(testSheet);
-//                Sheets.Spreadsheets spreadsheets = GoogleSheetsService.getSpreadsheets();
-//                List<File> files = GoogleSheetsService.getListFiles();
-                GoogleSheetsService.processSentMessage(userData);
-                return new SendMessage(message.getChatId(), "Данные записаны: " + userData.toString());
+
+                Integer timeStamp = message.getDate();
+
+                List<Object> ans = GoogleSheetsService.processSentMessage(userData, timeStamp);
+
+                return new SendMessage(message.getChatId(), "[" + name + "]: Данные внесены " + EmojiParser.parseToUnicode(":white_check_mark:") + System.lineSeparator()  +
+                        "Текущая статистика за месяц:" + System.lineSeparator() +
+                        "KK: " + ans.get(1) + System.lineSeparator() +
+                        "ДК: " + ans.get(2) + System.lineSeparator() +
+                        "ТИ: " + ans.get(3) + System.lineSeparator() +
+                        "СИМ: " + ans.get(4) + System.lineSeparator() +
+                        "МНП: " + ans.get(5));
             }
-            return new SendMessage(message.getChatId(), "Данные введены неверно");
+            return new SendMessage(message.getChatId(), "[" + name + "]: Данные введены неверно " + EmojiParser.parseToUnicode(":x:"));
         }
         return null;
     }

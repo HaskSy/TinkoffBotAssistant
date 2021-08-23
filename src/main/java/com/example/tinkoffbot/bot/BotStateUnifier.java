@@ -16,7 +16,7 @@ public class BotStateUnifier {
 
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(TelegramProcessing.class);
 
-    private HashMap<BotState, MessageHandler> messageHandlerMap = new HashMap<>();
+    private final HashMap<BotState, MessageHandler> messageHandlerMap = new HashMap<>();
 
     public BotStateUnifier(List<MessageHandler> messageHandlers) {
         messageHandlers.forEach(messageHandler ->
@@ -39,4 +39,5 @@ public class BotStateUnifier {
         log.info("Trying to find in messageHandlerMap BotState: {}", currentState);
         return messageHandlerMap.get(currentState);
     }
+
 }

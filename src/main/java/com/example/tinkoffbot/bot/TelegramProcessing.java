@@ -15,7 +15,7 @@ public class TelegramProcessing {
 
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(TelegramProcessing.class);
 
-    private BotStateUnifier botStateUnifier;
+    private final BotStateUnifier botStateUnifier;
 
     public TelegramProcessing(BotStateUnifier botStateUnifier) {
         this.botStateUnifier = botStateUnifier;
@@ -37,6 +37,10 @@ public class TelegramProcessing {
 
     private SendMessage handleInputMessage(Message message) throws IOException, GeneralSecurityException {
 
+        if (message.getChatId() != -511906413) {
+            return null;
+        }
+
         log.info("Start handling input message from user {} with ID: {}", message.getFrom().getUserName(), message.getFrom().getId());
         String input = message.getText();
         int userId = message.getFrom().getId();
@@ -52,6 +56,8 @@ public class TelegramProcessing {
             botState = BotState.DATA_COLLECTING;
         } else if (input.startsWith("/reg")) {
             botState = BotState.REGISTER;
+        } else if (input.equals("/help")) {
+            botState = BotState.HELP;
         } else {
             log.info("Input does not fit with valid cases, getting current bot state of user with ID: {}", userId);
             botState = BotState.START;
