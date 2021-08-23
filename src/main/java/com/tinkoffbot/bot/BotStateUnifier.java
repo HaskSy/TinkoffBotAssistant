@@ -1,6 +1,6 @@
-package com.example.tinkoffbot.bot;
+package com.tinkoffbot.bot;
 
-import com.example.tinkoffbot.bot.handlers.MessageHandler;
+import com.tinkoffbot.bot.handlers.MessageHandler;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;

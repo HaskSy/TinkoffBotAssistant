@@ -1,5 +1,6 @@
-package com.example.tinkoffbot.bot;
+package com.tinkoffbot.bot;
 
+import com.tinkoffbot.services.GoogleServices;
 import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -26,6 +27,7 @@ public class TelegramProcessing {
 
         if (update.hasMessage()) {
             Message message = update.getMessage();
+
             if (message.hasText()) {
                 log.info("New message user: {}, user_id: {}, chat_id: {}, text: {}",
                         message.getFrom().getUserName(), message.getFrom().getId(), message.getChatId(), message.getText());
@@ -36,10 +38,6 @@ public class TelegramProcessing {
     }
 
     private SendMessage handleInputMessage(Message message) throws IOException, GeneralSecurityException {
-
-        if (message.getChatId() != -511906413) {
-            return null;
-        }
 
         log.info("Start handling input message from user {} with ID: {}", message.getFrom().getUserName(), message.getFrom().getId());
         String input = message.getText();
@@ -52,12 +50,16 @@ public class TelegramProcessing {
         if (input.equals("/start")) {
             botState = BotState.START;
 
-        } else if (input.startsWith("/send")) {
+        } else if (message.getChatId().equals(Long.valueOf(System.getenv("GROUP_CHAT_ID"))) && input.startsWith("/send")) {
+            GoogleServices.setFolderId();
             botState = BotState.DATA_COLLECTING;
-        } else if (input.startsWith("/reg")) {
+        } else if (message.getChatId().equals(Long.valueOf(System.getenv("GROUP_CHAT_ID"))) && input.startsWith("/reg")) {
+            GoogleServices.setFolderId();
             botState = BotState.REGISTER;
-        } else if (input.equals("/help")) {
+        } else if (message.getChatId().equals(Long.valueOf(System.getenv("GROUP_CHAT_ID"))) && input.equals("/help")) {
             botState = BotState.HELP;
+        } else if (message.getChatId().equals(Long.valueOf(System.getenv("REPORT_GROUP_CHAT_ID")))) {
+            botState = BotState.REPORT_COLLECTING;
         } else {
             log.info("Input does not fit with valid cases, getting current bot state of user with ID: {}", userId);
             botState = BotState.START;
@@ -71,4 +73,6 @@ public class TelegramProcessing {
 
         return replyMessage;
     }
+
+
 }

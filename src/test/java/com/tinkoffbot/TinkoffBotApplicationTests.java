@@ -1,4 +1,4 @@
-package com.example.tinkoffbot;
+package com.tinkoffbot;
 
 import org.springframework.boot.test.context.SpringBootTest;
 

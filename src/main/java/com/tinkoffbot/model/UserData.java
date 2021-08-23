@@ -1,4 +1,4 @@
-package com.example.tinkoffbot.model;
+package com.tinkoffbot.model;
 
 public class UserData {
 
@@ -8,6 +8,7 @@ public class UserData {
     private int TI;
     private int SIM;
     private int MNP;
+    private int VS;
 
     public String getName() {
         return Name;
@@ -57,9 +58,23 @@ public class UserData {
         this.MNP = MNP;
     }
 
+    public int getVS() {
+        return VS;
+    }
+
+    public void setVS(int VS) {
+        this.VS = VS;
+    }
+
     @Override
     public String toString() {
-        return Name + " " + KK + " " + DK + " " + TI + " " + SIM + " " + MNP;
+        return Name.concat(" ")
+                .concat(Integer.toString(KK)).concat(" ")
+                .concat(Integer.toString(DK)).concat(" ")
+                .concat(Integer.toString(TI)).concat(" ")
+                .concat(Integer.toString(SIM)).concat(" ")
+                .concat(Integer.toString(MNP)).concat(" ")
+                .concat(Integer.toString(VS));
     }
 
 }

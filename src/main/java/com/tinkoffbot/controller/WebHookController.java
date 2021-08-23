@@ -1,6 +1,6 @@
-package com.example.tinkoffbot.controller;
+package com.tinkoffbot.controller;
 
-import com.example.tinkoffbot.bot.TelegramBot;
+import com.tinkoffbot.bot.TelegramBot;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

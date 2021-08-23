@@ -45,8 +45,7 @@ telegram_token
 TODO.md
 
 ### Google Sheets ###
-src/main/resources/credentials.json
-src/main/resources/client_secret.json
-src/main/resources/credentials.p12
-tokens
-
+#src/main/resources/credentials.json
+#src/main/resources/client_secret.json
+#src/main/resources/credentials.p12
+#tokens

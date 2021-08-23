@@ -1,4 +1,4 @@
-package com.example.tinkoffbot.bot;
+package com.tinkoffbot.bot;
 
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;

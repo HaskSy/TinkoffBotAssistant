@@ -6,17 +6,22 @@ plugins {
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+//configurations.implementation.setCanBeResolved(true)
 
 repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    runtimeOnly 'org.postgresql:postgresql'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation 'org.telegram:telegrambots-spring-boot-starter:4.9.1'
 
+
+dependencies {
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-tomcat'
+    implementation 'org.telegram:telegrambots-spring-boot-starter:4.9.1'
     implementation 'com.google.api-client:google-api-client-java6:1.32.1'
     implementation 'com.google.oauth-client:google-oauth-client-jetty:1.22.0'
     implementation 'com.google.apis:google-api-services-drive:v3-rev110-1.23.0'
@@ -28,3 +33,31 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+//jar {
+//    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+//
+//    manifest {
+//        attributes 'Main-Class': 'com.tinkoffbot.TinkoffbotApplication'
+//    }
+//
+//    from {
+//        configurations.implementation.collect { it.isDirectory() ? it : zipTree(it) }
+//    }
+//}
+
+//
+//tasks.withType(Jar) {
+//    duplicatesStrategy(DuplicatesStrategy.INHERIT)
+//}
+//
+//task customFatJar(type: Jar) {
+//    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF'
+//
+//    manifest {
+//        attributes 'Main-Class': 'com.baeldung.fatjar.Application'
+//    }
+//    baseName = 'all-in-one-jar'
+//    from { configurations.implementation.collect { it.isDirectory() ? it : zipTree(it) } }
+//    with jar
+//}
