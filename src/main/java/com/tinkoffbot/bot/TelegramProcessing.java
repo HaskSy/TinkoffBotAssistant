@@ -1,6 +1,8 @@
 package com.tinkoffbot.bot;
 
 import com.tinkoffbot.services.GoogleServices;
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -17,6 +19,12 @@ public class TelegramProcessing {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(TelegramProcessing.class);
 
     private final BotStateUnifier botStateUnifier;
+
+    @Value("${telegrambot.statsChatId}")
+    private long statsChatId;
+
+    @Value("${telegrambot.reportChatId}")
+    private long reportChatId;
 
     public TelegramProcessing(BotStateUnifier botStateUnifier) {
         this.botStateUnifier = botStateUnifier;
@@ -42,7 +50,7 @@ public class TelegramProcessing {
         log.info("Start handling input message from user {} with ID: {}", message.getFrom().getUserName(), message.getFrom().getId());
         String input = message.getText();
         int userId = message.getFrom().getId();
-        BotState botState;
+        BotState botState = null;
         SendMessage replyMessage;
 
         log.info("Input: {}", input);
@@ -50,17 +58,25 @@ public class TelegramProcessing {
         if (input.equals("/start")) {
             botState = BotState.START;
 
-        } else if (message.getChatId().equals(Long.valueOf(System.getenv("GROUP_CHAT_ID"))) && input.startsWith("/send")) {
-            GoogleServices.setFolderId();
-            botState = BotState.DATA_COLLECTING;
-        } else if (message.getChatId().equals(Long.valueOf(System.getenv("GROUP_CHAT_ID"))) && input.startsWith("/reg")) {
-            GoogleServices.setFolderId();
-            botState = BotState.REGISTER;
-        } else if (message.getChatId().equals(Long.valueOf(System.getenv("GROUP_CHAT_ID"))) && input.equals("/help")) {
-            botState = BotState.HELP;
-        } else if (message.getChatId().equals(Long.valueOf(System.getenv("REPORT_GROUP_CHAT_ID")))) {
+        } else if (message.getChatId().equals(statsChatId)) {
+
+            if (input.startsWith("/send")) {
+                GoogleServices.setFolderId();
+                botState = BotState.DATA_COLLECTING;
+            }
+            else if (input.startsWith("/reg")) {
+                GoogleServices.setFolderId();
+                botState = BotState.REGISTER;
+            }
+            else if (input.equals("/help")) {
+                botState = BotState.HELP;
+            }
+
+        } else if (message.getChatId().equals(reportChatId)) {
             botState = BotState.REPORT_COLLECTING;
-        } else {
+        }
+
+        if (botState == null) {
             log.info("Input does not fit with valid cases, getting current bot state of user with ID: {}", userId);
             botState = BotState.START;
         }

@@ -1,7 +1,7 @@
 package com.tinkoffbot.services;
 
 import com.google.api.client.http.FileContent;
-import com.tinkoffbot.ErrorEnum;
+import com.tinkoffbot.bot.ErrorEnum;
 import com.tinkoffbot.model.ReportData;
 import com.tinkoffbot.model.UserData;
 import com.google.api.client.auth.oauth2.Credential;

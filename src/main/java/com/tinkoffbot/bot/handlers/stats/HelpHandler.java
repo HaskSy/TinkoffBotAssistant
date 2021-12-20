@@ -1,6 +1,7 @@
-package com.tinkoffbot.bot.handlers;
+package com.tinkoffbot.bot.handlers.stats;
 
 import com.tinkoffbot.bot.BotState;
+import com.tinkoffbot.bot.handlers.MessageHandler;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;

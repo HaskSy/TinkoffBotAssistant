@@ -1,6 +1,7 @@
-package com.tinkoffbot.bot.handlers;
+package com.tinkoffbot.bot.handlers.stats;
 
 import com.tinkoffbot.bot.BotState;
+import com.tinkoffbot.bot.handlers.MessageHandler;
 import com.tinkoffbot.model.UserData;
 import com.tinkoffbot.services.GoogleServices;
 import com.vdurmont.emoji.EmojiParser;

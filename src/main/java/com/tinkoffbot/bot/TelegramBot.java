@@ -1,5 +1,6 @@
 package com.tinkoffbot.bot;
 
+import lombok.Getter;
 import lombok.Setter;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;

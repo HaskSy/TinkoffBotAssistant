@@ -1,7 +1,8 @@
-package com.tinkoffbot.bot.handlers;
+package com.tinkoffbot.bot.handlers.reports;
 
-import com.tinkoffbot.ErrorEnum;
+import com.tinkoffbot.bot.ErrorEnum;
 import com.tinkoffbot.bot.BotState;
+import com.tinkoffbot.bot.handlers.MessageHandler;
 import com.tinkoffbot.model.ReportData;
 import com.tinkoffbot.services.GoogleServices;
 import com.vdurmont.emoji.EmojiParser;
