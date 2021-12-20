@@ -1,6 +1,7 @@
 package com.tinkoffbot.bot;
 
 import com.tinkoffbot.bot.handlers.MessageHandler;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -18,7 +19,7 @@ public class BotStateUnifier {
 
     private final HashMap<BotState, MessageHandler> messageHandlerMap = new HashMap<>();
 
-    public BotStateUnifier(List<MessageHandler> messageHandlers) {
+    public BotStateUnifier(@NotNull List<MessageHandler> messageHandlers) {
         messageHandlers.forEach(messageHandler ->
                 this.messageHandlerMap.put(
                         messageHandler.getHandleName(),
@@ -27,7 +28,7 @@ public class BotStateUnifier {
         );
     }
 
-    public SendMessage execute(BotState currentState, Message message) throws IOException, GeneralSecurityException {
+    public SendMessage execute(BotState currentState, @NotNull Message message) throws IOException, GeneralSecurityException {
         MessageHandler currentMessageHandler = findMessageHandler(currentState);
         log.info("Starting handling MessageHandler: {}, Message: {}",
                 currentMessageHandler.getHandleName().toString(),

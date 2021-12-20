@@ -5,6 +5,7 @@ import com.tinkoffbot.bot.handlers.MessageHandler;
 import com.tinkoffbot.model.UserData;
 import com.tinkoffbot.services.GoogleServices;
 import com.vdurmont.emoji.EmojiParser;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -48,7 +49,7 @@ public class DataCollectingHandler implements MessageHandler {
     }
 
     @Override
-    public SendMessage handle(Message message) throws IOException, GeneralSecurityException {
+    public SendMessage handle(@NotNull Message message) throws IOException, GeneralSecurityException {
 
         String textMessage = message.getText();
 

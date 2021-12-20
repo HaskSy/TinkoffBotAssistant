@@ -1,11 +1,12 @@
 package com.tinkoffbot.bot.handlers.reports;
 
-import com.tinkoffbot.bot.ErrorEnum;
+import com.tinkoffbot.services.ErrorEnum;
 import com.tinkoffbot.bot.BotState;
 import com.tinkoffbot.bot.handlers.MessageHandler;
 import com.tinkoffbot.model.ReportData;
 import com.tinkoffbot.services.GoogleServices;
 import com.vdurmont.emoji.EmojiParser;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -38,7 +39,7 @@ public class ReportHandler implements MessageHandler {
     }
 
     @Override
-    public SendMessage handle(Message message) throws IOException, GeneralSecurityException {
+    public SendMessage handle(@NotNull Message message) throws IOException, GeneralSecurityException {
 
         if (!checkIfReportMessage(message.getText())) {
             return new SendMessage(message.getChatId(), "Данные введены неверно ".concat(EmojiParser.parseToUnicode(":x:")));

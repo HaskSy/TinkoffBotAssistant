@@ -2,6 +2,7 @@ package com.tinkoffbot.bot;
 
 import com.tinkoffbot.services.GoogleServices;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
@@ -45,7 +46,7 @@ public class TelegramProcessing {
         return replyMessage;
     }
 
-    private SendMessage handleInputMessage(Message message) throws IOException, GeneralSecurityException {
+    private SendMessage handleInputMessage(@NotNull Message message) throws IOException, GeneralSecurityException {
 
         log.info("Start handling input message from user {} with ID: {}", message.getFrom().getUserName(), message.getFrom().getId());
         String input = message.getText();
