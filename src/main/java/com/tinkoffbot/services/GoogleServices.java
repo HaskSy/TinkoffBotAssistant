@@ -313,7 +313,7 @@ public class GoogleServices {
      */
     private static @Nullable ErrorEnum uploadReportDataInSheet(@NotNull ReportData reportData, String spreadsheetId) throws IOException, GeneralSecurityException {
 
-        List<Object> userDataList = Arrays.asList(reportData.getFio(), reportData.getActivityId(), reportData.getQuestion());
+        List<Object> userDataList = Arrays.asList(reportData.getFsl(), reportData.getActivityId(), reportData.getQuestion());
 
         ValueRange appendBody = new ValueRange();
 

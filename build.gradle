@@ -29,6 +29,8 @@ dependencies {
     implementation 'com.google.apis:google-api-services-drive:v3-rev110-1.23.0'
     implementation 'com.google.apis:google-api-services-sheets:v4-rev581-1.25.0'
     implementation 'com.vdurmont:emoji-java:3.2.0'
+    implementation 'io.swagger.core.v3:swagger-annotations:2.1.11'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.0'
 
 }
 

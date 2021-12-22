@@ -20,7 +20,7 @@ public class ReportHandler implements MessageHandler {
     private ReportData collectData(String text) {
         String[] message_array = text.split("\n", 7);
         ReportData data = new ReportData();
-        data.setFio(message_array[0].substring(10));
+        data.setFsl(message_array[0].substring(10));
         data.setActivityId(message_array[3].substring(16));
         data.setQuestion(message_array[6].substring(11));
         return data;
