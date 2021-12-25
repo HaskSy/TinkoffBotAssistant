@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.example'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 sourceCompatibility = '11'
 
 //configurations.implementation.setCanBeResolved(true)
@@ -19,16 +19,23 @@ repositories {
 dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.projectlombok:lombok:1.18.20'
-    implementation 'org.jetbrains:annotations:20.1.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.boot:spring-boot-starter-tomcat'
+
+    compileOnly 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+
+    implementation 'org.jetbrains:annotations:20.1.0'
+
     implementation 'org.telegram:telegrambots-spring-boot-starter:4.9.1'
+
     implementation 'com.google.api-client:google-api-client-java6:1.32.1'
     implementation 'com.google.oauth-client:google-oauth-client-jetty:1.22.0'
     implementation 'com.google.apis:google-api-services-drive:v3-rev110-1.23.0'
     implementation 'com.google.apis:google-api-services-sheets:v4-rev581-1.25.0'
+
     implementation 'com.vdurmont:emoji-java:3.2.0'
+
     implementation 'io.swagger.core.v3:swagger-annotations:2.1.11'
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.0'
 
@@ -37,31 +44,3 @@ dependencies {
 test {
     useJUnitPlatform()
 }
-
-//jar {
-//    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
-//
-//    manifest {
-//        attributes 'Main-Class': 'com.tinkoffbot.TinkoffbotApplication'
-//    }
-//
-//    from {
-//        configurations.implementation.collect { it.isDirectory() ? it : zipTree(it) }
-//    }
-//}
-
-//
-//tasks.withType(Jar) {
-//    duplicatesStrategy(DuplicatesStrategy.INHERIT)
-//}
-//
-//task customFatJar(type: Jar) {
-//    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF'
-//
-//    manifest {
-//        attributes 'Main-Class': 'com.baeldung.fatjar.Application'
-//    }
-//    baseName = 'all-in-one-jar'
-//    from { configurations.implementation.collect { it.isDirectory() ? it : zipTree(it) } }
-//    with jar
-//}
